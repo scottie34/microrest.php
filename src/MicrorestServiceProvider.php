@@ -27,9 +27,11 @@ class MicrorestServiceProvider implements ServiceProviderInterface
             $baseUrl = $apiDefinition->getBaseUrl();
             $app['microrest.api_url_prefix'] = $baseUrl ? substr(parse_url($baseUrl, PHP_URL_PATH), 1) : 'api';
 
-            $app['microrest.restController'] = $app->share(function () use ($app) {
-                return new RestController($app['db']);
-            });
+            if (!isset($app['microrest.restController'])) {
+                $app['microrest.restController'] = $app->share(function () use ($app) {
+                    return new RestController($app['db']);
+                });
+            }
 
             $app['microrest.routeBuilder'] = $app->share(function () {
                 return new RouteBuilder();

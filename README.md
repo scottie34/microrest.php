@@ -1,3 +1,6 @@
+# Query Param Quick Win
+Fork of microrest to manage query params of GET action
+
 # Marmelab Microrest
 
 Microrest is a Silex provider to setting up a REST API on top of a relational database, based on a YAML (RAML) configuration file.

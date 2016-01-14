@@ -13,6 +13,8 @@ class RestController
 {
     protected $dbal;
 
+    protected $decorators;
+
     public function __construct(Connection $dbal)
     {
         $this->dbal = $dbal;
@@ -23,6 +25,10 @@ class RestController
         return new JsonResponse($availableRoutes);
     }
 
+    public function registerDecorator($objectType, Decorator $decorator) {
+        $this->decorators[$objectType] = $decorator;
+    }
+
     public function getListAction($objectType, Request $request)
     {
         $queryBuilder = $this->dbal
@@ -30,6 +36,10 @@ class RestController
             ->select('o.*')
             ->from($objectType, 'o')
         ;
+
+        if (isset($this->decorators[$objectType])) {
+            $queryBuilder = $this->decorators[$objectType]->beforeGetList($queryBuilder, $request);
+        }
 
         if ($sort = $request->query->get('_sort')) {
             $queryBuilder->orderBy($sort, $request->query->get('_sortDir', 'ASC'));

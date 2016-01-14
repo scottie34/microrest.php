@@ -1,6 +1,6 @@
 {
-    "name": "marmelab/microrest",
-    "description": "Silex Provider that generates REST API from a RAML description file",
+    "name": "scottie34/microrest",
+    "description": "Quick win fork of microrest to manage get query params",
     "license": "MIT",
     "authors": [
         {
