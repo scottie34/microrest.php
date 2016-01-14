@@ -8,4 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 abstract class Decorator
 {
     public abstract function beforeGetList(QueryBuilder $queryBuilder, Request $request);
+
+    public abstract function afterGetList(QueryBuilder $queryBuilder, Request $request);
+
 }

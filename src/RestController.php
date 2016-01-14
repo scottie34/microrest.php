@@ -55,7 +55,11 @@ class RestController
         $pager = new DoctrineDbalAdapter($queryBuilder, $countQueryBuilderModifier);
 
         $nbResults = $pager->getNbResults();
-        $results = $pager->getSlice($request->query->get('_start', 0), $request->query->get('_end', 20));
+        $results = $pager->getSlice($request->query->get('_start', 0), $request->query->get('_end', 200));
+
+        if (isset($this->decorators[$objectType])) {
+            $results = $this->decorators[$objectType]->afterGetList($results);
+        }
 
         return new JsonResponse($results, 200, array(
             'X-Total-Count' => $nbResults,
