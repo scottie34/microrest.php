@@ -1,5 +1,6 @@
-# Query Param Quick Win
-Fork of microrest to manage query params of GET action
+# Decorate the RestController
+allows to manage request parameter and response format using registered Decorator
+
 
 # Marmelab Microrest
 
