@@ -34,8 +34,7 @@ class RestController
         $queryBuilder = $this->dbal
             ->createQueryBuilder()
             ->select('o.*')
-            ->from($objectType, 'o')
-        ;
+            ->from($objectType, 'o');
 
         if (isset($this->decorators[$objectType])) {
             $queryBuilder = $this->decorators[$objectType]->beforeGetList($queryBuilder, $request);
@@ -57,13 +56,18 @@ class RestController
         $nbResults = $pager->getNbResults();
         $results = $pager->getSlice($request->query->get('_start', 0), $request->query->get('_end', 200));
 
+
+
         if (isset($this->decorators[$objectType])) {
             $results = $this->decorators[$objectType]->afterGetList($results);
+            return $this->decorators[$objectType]->format($results);
         }
 
-        return new JsonResponse($results, 200, array(
+        $response = new JsonResponse($results, 200, array(
             'X-Total-Count' => $nbResults,
         ));
+
+        return $response;
     }
 
     public function postListAction($objectType, Request $request)
@@ -109,12 +113,12 @@ class RestController
         return new JsonResponse('', 204);
     }
 
-    private function getObjectResponse($name, $id, $status = 200)
+    private function getObjectResponse($objectType, $id, $status = 200)
     {
         $queryBuilder = $this->dbal->createQueryBuilder();
         $query = $queryBuilder
             ->select('*')
-            ->from($name)
+            ->from($objectType)
             ->where('id = '.$queryBuilder->createPositionalParameter($id))
         ;
 
@@ -123,6 +127,10 @@ class RestController
             return new Response('', 404);
         }
 
+        if (isset($this->decorators[$objectType])) {
+            $result = $this->decorators[$objectType]->afterGetObject($result);
+            return $this->decorators[$objectType]->format($result);
+        }
         return new JsonResponse($result, $status);
     }
 }
