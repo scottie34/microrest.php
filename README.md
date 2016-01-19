@@ -1,4 +1,3 @@
-# Query Param Quick Win
 Fork of [Microrest](https://github.com/marmelab/microrest.php) which allows to manage GET request params and format/wrap results.
 
 # How To
