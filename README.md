@@ -1,5 +1,5 @@
 # Query Param Quick Win
-Fork of microrest which allows to manage GET request params and format/wrap results.
+Fork of [Microrest](https://github.com/marmelab/microrest.php) which allows to manage GET request params and format/wrap results.
 
 # How To
 ## Implements a Decorator
@@ -63,10 +63,7 @@ $app['microrest.restController'] = $app->share(function() use ($app) {
 $app->register(new Marmelab\Microrest\MicrorestServiceProvider(), array(
     'microrest.config_file' => __DIR__ . '/api.raml'
 ));
-```php
-
-
-
+```
 
 ---------------------------------
 
