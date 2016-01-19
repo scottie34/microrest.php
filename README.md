@@ -1,5 +1,74 @@
 # Query Param Quick Win
-Fork of microrest to manage query params of GET action
+Fork of microrest which allows to manage GET request params and format/wrap results.
+
+# How To
+## Implements a Decorator
+```php
+abstract class Decorator
+{
+    /**
+     * This method is called before the QueryBuilder is executed on GET /apiObjects <br>
+     * It allows to add where clause to the QueryBuilder based on Request parameters.
+     * @param QueryBuilder $queryBuilder
+     * @param Request $request
+     * @return QueryBuilder
+     */
+    public abstract function beforeGetList(QueryBuilder $queryBuilder, Request $request);
+
+    /**
+     * This method is called after the query has been executed on GET /apiObjects <br>
+     * It allows to transform the result retrieved from the executed query.
+     * @param $result array
+     * @return array
+     */
+    public abstract function afterGetList($result);
+
+    /**
+     * This method is called after the query has been executed on GET /apiObject/ <br>
+     * It allows to transform the result retrieved from the executed query.
+     * @param $result array
+     * @return array
+     */
+    public abstract function afterGetObject($result);
+
+    /**
+     * This method is called after a query has been executed with transformed result (see afterGetObject and afterGetList methods).<br>
+     * It allows to wrap and format the result in a JsonResponse.
+     * @param $results array
+     * @return JsonResponse
+     */
+    public abstract function format($results);
+
+}
+```
+
+## Register your Decorator into the RestController
+RestController::registerDecorator
+```php
+public function registerDecorator($objectType, Decorator $decorator)
+```
+
+## Example
+A basic example can be found in [silex-fwk project](https://github.com/scottie34/silex-fwk)
+* Controller/PostController.php
+* in app/app.php 
+```php
+// creates the decorated restController
+$app['microrest.restController'] = $app->share(function() use ($app) {
+      $restController = new  Marmelab\Microrest\RestController($app['db']);
+      $restController->registerDecorator('posts', new \SilexFwk\Decorator\PostDecorator());
+      return $restController;
+});
+// THEN, register the microrestServiceProvider
+$app->register(new Marmelab\Microrest\MicrorestServiceProvider(), array(
+    'microrest.config_file' => __DIR__ . '/api.raml'
+));
+```php
+
+
+
+
+---------------------------------
 
 # Marmelab Microrest
 
